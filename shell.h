@@ -1,15 +1,14 @@
-#define PROMPT_SHELL "shell"
+#define PROMPT_MYSHELL "shell"
 #define MAX_STRINGSIZE 1024
 #define MAX_ARG_LENGTH 64
 #define MAX_NUM_OF_ARGUMENTS 64
 
-typedef struct StrCmd
-{
+typedef struct StrCmd{
     int iCmdID;
     int iCmdType;
-    char *sInputFile;
-    char *sOutputFile;
-    char **args;
+    char* sInputFile;
+    char* sOutputFile;
+    char** args;
     int isRedirInputFile;
     int isRedirOutputFile;
     int isBackgroundRunning;
@@ -22,18 +21,20 @@ typedef struct StrCmdArray{
     StrCmd pCommand[20];
 }StrCmdArray;
 
-void Prompt();
-void IM();
 int RunMyShell(StrCmdArray *cmdList);
+void ShowPrompt();
+void InteractiveMode();
 void BatchMode(char *filename);
+
 void sigintHandler(int sig_num);
-void getUsername(char *username, int size);
+void getUsername(char*username, int size);
 void getHostname(char *hostname, int size);
 int GetArgsCount(char *const *args);
 void GetAbsPath(char *AbsolutePath, const char *CurPath);
 int GetArgsCount(char *const *args);
 void FreeCommandArray(StrCmdArray *cmdList);
 void ShowError();
+
 char *getCmdLine( int *isvalid, FILE* inputStream );
 char** LineToArray(char *line);
 void OrgCommands(StrCmdArray *cmdList);
@@ -43,6 +44,7 @@ int RunCommands(StrCmdArray *cmdList);
 int RunACommand(StrCmd *cmd);
 int RunCommandsNotWait(StrCmdArray *cmdList);
 int RunCommandsPipe(StrCmdArray *cmdList);
+
 int Process_CD (StrCmd *cmd);
 int Process_CLR ();
 int Process_DIR (StrCmd *cmd);
@@ -52,3 +54,5 @@ int Process_HELP (StrCmd *cmd);
 int Process_PAUSE ();
 int Process_QUIT ();
 int Process_test();
+
+

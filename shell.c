@@ -8,25 +8,9 @@
 #include <dirent.h>
 #include "shell.h"
 
-int main(int argc, char **argv){
-    char * defaultPath = "/bin";
-    char shell_path[MAX_STRINGSIZE]="shell=";
-    strcat(shell_path, getenv("PWD"));
-    strcat(shell_path,"/myshell");
-    putenv(shell_path);
-    setenv("PATH",defaultPath,1);
-    if (argc == 1)
+StrCmdArray cmdList;
 
-        InteractiveMode();
-    else if (argc == 2)
-        BatchMode(argv[1]);
-    else
-        ShowError();
-
-    return EXIT_SUCCESS;
-}
-
-void Prompt(){
+void ShowPrompt(){
     char userName[100] = {0};
     char hostname[100] = {0};
     char currentPath[250] = {0};
@@ -39,12 +23,12 @@ void Prompt(){
     printf("%s>", PROMPT_MYSHELL);
 }
 
-void IM(){
+void InteractiveMode(){
     int isValidRead = 0;
     signal(SIGINT, sigintHandler);
 
     while (1){
-        Prompt();
+        ShowPrompt();
         memset(&cmdList,0x00, sizeof(cmdList));
 
         char *command = getCmdLine(&isValidRead, stdin);
@@ -109,6 +93,7 @@ void BatchMode(char *filename){
     fclose(fInput);
     printf("-----myshell end----- \n");
 }
+
 
 int RunMyShell(StrCmdArray *cmdList)
 {
@@ -390,4 +375,22 @@ int Process_PAUSE (){
 
 int Process_QUIT (){
     exit(0);
+}
+
+int main(int argc, char **argv){
+    char * defaultPath = "/bin";
+    char shell_path[MAX_STRINGSIZE]="shell=";
+    strcat(shell_path, getenv("PWD"));
+    strcat(shell_path,"/myshell");
+    putenv(shell_path);
+    setenv("PATH",defaultPath,1);
+    if (argc == 1)
+
+        InteractiveMode();
+    else if (argc == 2)
+        BatchMode(argv[1]);
+    else
+        ShowError();
+
+    return EXIT_SUCCESS;
 }
