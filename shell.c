@@ -193,3 +193,41 @@ int RunACommand(StrCmd *cmd){
     }
     return 1;
 }
+
+int RunCommandsPipe(StrCmdArray *cmdList){
+        size_t i, n;
+        int prev_pipe, pfds[2];
+        n = cmdList->iCmdTotal;
+        prev_pipe = STDIN_FILENO;
+
+        for (i = 0; i < n - 1; i++){
+            pipe(pfds);
+            if (fork() == 0)
+            {
+                if (prev_pipe != STDIN_FILENO) {
+                    dup2(prev_pipe, STDIN_FILENO);
+                    close(prev_pipe);
+                }
+
+                dup2(pfds[1], STDOUT_FILENO);
+                close(pfds[1]);
+
+                execvp(cmdList->pCommand[i].args[0], cmdList->pCommand[i].args);
+                ShowError();
+                exit(EXIT_FAILURE);
+            }
+
+            close(prev_pipe);
+            close(pfds[1]);
+            prev_pipe = pfds[0];
+        }
+
+        if (prev_pipe != STDIN_FILENO) {
+            dup2(prev_pipe, STDIN_FILENO);
+            close(prev_pipe);
+        }
+
+        execvp(cmdList->pCommand[i].args[0], cmdList->pCommand[i].args);
+        ShowError();
+        exit(EXIT_FAILURE);
+}
