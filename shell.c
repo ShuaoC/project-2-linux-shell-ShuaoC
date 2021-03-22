@@ -231,3 +231,145 @@ int RunCommandsPipe(StrCmdArray *cmdList){
         ShowError();
         exit(EXIT_FAILURE);
 }
+
+int Process_CD (StrCmd *cmd){
+    int num_of_args = GetArgsCount(cmd->args);
+
+    if (num_of_args  > 1){
+        ShowError();
+        return 1;
+    }
+    else if (num_of_args == 0){
+        char cwd[MAX_STRINGSIZE];
+        if (getcwd(cwd, sizeof(cwd)) != NULL) {
+            printf("%s\n", cwd);
+        }
+    }
+    else{
+        if (chdir(cmd->args[num_of_args])){
+            ShowError();
+            printf("\n");
+            return 1;
+        }
+    }
+    return EXIT_SUCCESS;
+}
+
+int Process_CLR (){
+    printf("\033[H\033[J");
+    return EXIT_SUCCESS;
+}
+
+int Process_DIR (StrCmd *cmd){
+    FILE * outFileFp=NULL;
+    int num_of_args = GetArgsCount(cmd->args);
+
+    struct dirent *de;
+
+    if (cmd->isRedirOutputFile){
+        char max_file_path[100] = {0};
+        GetAbsPath(max_file_path, cmd->sOutputFile);
+        outFileFp=freopen(max_file_path, cmd->isOutputTruncated ==  1 ? "w": "a",stdout);
+    }
+
+    DIR *dr;
+    if (num_of_args == 0){
+        dr = opendir(".");
+    }
+    else{
+        dr = opendir(cmd->args[num_of_args]);
+    }
+
+    if (dr == NULL){
+        ShowError();
+        return 1;
+    }
+
+    while ((de = readdir(dr)) != NULL)
+        printf("%s\n", de->d_name);
+
+    closedir(dr);
+
+    if(outFileFp){
+        fclose(outFileFp);
+        freopen("/dev/tty","w",stdout);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int Process_ENVIORN (StrCmd *cmd){
+    FILE * outFileFp=NULL;
+    int i = 0;
+
+    if (cmd->isRedirOutputFile){
+        char max_file_path[100] = {0};
+        GetAbsPath(max_file_path, cmd->sOutputFile);
+        outFileFp=freopen(max_file_path, cmd->isOutputTruncated ==  1 ? "w": "a",stdout);
+    }
+
+    while(__environ[i]) {
+        printf("%s\n", __environ[i++]);
+    }
+
+    if(outFileFp){
+        fclose(outFileFp);
+        freopen("/dev/tty","w",stdout);
+    }
+    return EXIT_SUCCESS;
+}
+
+int Process_ECHO (StrCmd *cmd){
+    int num_of_args;
+    FILE * outFileFp=NULL;
+
+    if (cmd->isRedirOutputFile){
+        char max_file_path[100] = {0};
+        GetAbsPath(max_file_path, cmd->sOutputFile);
+        outFileFp=freopen(max_file_path, cmd->isOutputTruncated ==  1 ? "w": "a",stdout);
+    }
+
+    for (num_of_args = 1; ((num_of_args < MAX_NUM_OF_ARGUMENTS) && (cmd->args[num_of_args] != NULL)); num_of_args++){
+        printf("%s \t",cmd->args[num_of_args]);
+    }
+
+
+    printf("\n");
+
+    if(outFileFp){
+        fclose(outFileFp);
+        freopen("/dev/tty","w",stdout);
+    }
+    return 1;
+}
+
+int Process_HELP (StrCmd *cmd){
+    FILE * outFileFp=NULL;
+    if (cmd->isRedirOutputFile){
+        char max_file_path[100] = {0};
+        GetAbsPath(max_file_path, cmd->sOutputFile);
+        outFileFp=freopen(max_file_path, cmd->isOutputTruncated ==  1 ? "w": "a",stdout);
+    }
+
+    if (fork() == 0){
+        char * const help[] = { "more", "readme", NULL };
+        if (execvp(help[0], help) == -1){
+            exit(EXIT_FAILURE);
+        }
+    }
+    if(outFileFp){
+        fclose(outFileFp);
+        freopen("/dev/tty","w",stdout);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int Process_PAUSE (){
+    getpass(" Myshell is paused. \n Press <ENTER> key to continue.");
+    return EXIT_SUCCESS;
+}
+
+int Process_QUIT (){
+    exit(0);
+}
