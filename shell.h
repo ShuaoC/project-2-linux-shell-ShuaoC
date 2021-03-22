@@ -16,6 +16,12 @@ typedef struct StrCmd
     int isOutputTruncated;
 } StrCmd;
 
+typedef struct StrCmdArray{
+    int iCmdTotal;
+    int isPipe;
+    StrCmd pCommand[20];
+}StrCmdArray;
+
 void Prompt();
 void IM();
 int RunMyShell(StrCmdArray *cmdList);

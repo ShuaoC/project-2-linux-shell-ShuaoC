@@ -8,6 +8,24 @@
 #include <dirent.h>
 #include "shell.h"
 
+int main(int argc, char **argv){
+    char * defaultPath = "/bin";
+    char shell_path[MAX_STRINGSIZE]="shell=";
+    strcat(shell_path, getenv("PWD"));
+    strcat(shell_path,"/myshell");
+    putenv(shell_path);
+    setenv("PATH",defaultPath,1);
+    if (argc == 1)
+
+        InteractiveMode();
+    else if (argc == 2)
+        BatchMode(argv[1]);
+    else
+        ShowError();
+
+    return EXIT_SUCCESS;
+}
+
 void Prompt(){
     char userName[100] = {0};
     char hostname[100] = {0};
