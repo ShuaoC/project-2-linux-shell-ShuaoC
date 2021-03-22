@@ -125,3 +125,16 @@ int RunCommands(StrCmdArray *cmdList){
     }
     return EXIT_SUCCESS;
 }
+
+int RunBuildInCmd(StrCmd *cmd){
+
+    if (strcmp(cmd->args[0],"cd")==0) {return Process_CD(cmd);}
+    else if (strcmp(cmd->args[0],"clr")==0) {return Process_CLR();}
+    else if (strcmp(cmd->args[0],"dir")==0) {return Process_DIR(cmd);}
+    else if (strcmp(cmd->args[0],"environ")==0) {return Process_ENVIORN(cmd);}
+    else if (strcmp(cmd->args[0],"echo")==0) {return Process_ECHO(cmd);}
+    else if (strcmp(cmd->args[0],"help")==0) {return Process_HELP(cmd);}
+    else if (strcmp(cmd->args[0],"pause")==0) {return Process_PAUSE();}
+    else if (strcmp(cmd->args[0],"quit")==0) {return Process_QUIT();}
+    else{return -1;}
+}
