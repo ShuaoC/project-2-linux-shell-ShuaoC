@@ -20,7 +20,7 @@ void ShowPrompt(){
     getcwd(currentPath, 250);
 
     printf("%s@%s:%s$ ", userName, hostname,currentPath);
-    printf("%s>", PROMPT_MYSHELL);
+    printf("%s>", PROMPT_SHELL);
 }
 
 void InteractiveMode(){

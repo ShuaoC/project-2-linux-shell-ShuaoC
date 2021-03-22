@@ -1,4 +1,4 @@
-#define PROMPT_MYSHELL "shell"
+#define PROMPT_SHELL "shell"
 #define MAX_STRINGSIZE 1024
 #define MAX_ARG_LENGTH 64
 #define MAX_NUM_OF_ARGUMENTS 64
