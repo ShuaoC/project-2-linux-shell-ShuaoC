@@ -91,3 +91,37 @@ void BatchMode(char *filename){
     fclose(fInput);
     printf("-----myshell end----- \n");
 }
+
+int RunMyShell(StrCmdArray *cmdList)
+{
+    if (cmdList == NULL){
+        return 1;
+    }
+
+
+    if (cmdList->iCmdTotal == 1){
+
+        if (cmdList->pCommand[0].args[0] == NULL){
+            return 1;
+        }
+
+        if (RunBuildInCmd(&cmdList->pCommand[0]) != -1){return EXIT_SUCCESS;}
+    }
+
+    return RunCommands(cmdList);
+}
+
+int RunCommands(StrCmdArray *cmdList){
+    if (cmdList->iCmdTotal == 1){
+        RunACommand(&cmdList->pCommand[0]);
+
+    }
+    else if (cmdList->iCmdTotal > 1 && cmdList->isPipe != 1){
+        for (int i = 0; i < cmdList->iCmdTotal; i++)
+            RunACommand(&cmdList->pCommand[i]);
+    }
+    else{
+        RunCommandsPipe(cmdList);
+    }
+    return EXIT_SUCCESS;
+}
