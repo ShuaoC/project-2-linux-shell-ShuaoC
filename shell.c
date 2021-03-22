@@ -138,3 +138,58 @@ int RunBuildInCmd(StrCmd *cmd){
     else if (strcmp(cmd->args[0],"quit")==0) {return Process_QUIT();}
     else{return -1;}
 }
+
+int RunACommand(StrCmd *cmd){
+    pid_t pid;
+    int status;
+    pid = fork();
+
+
+    char max_file_path[100] = {0};
+    char parent[100] = {0};
+    strcpy(parent,"parent=") ;
+    strcat(parent, getenv("shell"));
+    FILE * outFileFp=NULL,* inFileFp;
+    if (cmd->isRedirOutputFile){
+        GetAbsPath(max_file_path, cmd->sOutputFile);
+        outFileFp=freopen(max_file_path, cmd->isOutputTruncated ==  1 ? "w": "a",stdout);
+    }
+
+    if (pid == 0){
+        putenv( parent);
+        printf("%s, %s", cmd->args[0], cmd->args[1]);
+
+        if (cmd->isRedirInputFile){
+            GetAbsPath(max_file_path,cmd->sInputFile);
+            inFileFp= freopen(max_file_path,"r",stdin);
+        }
+        if (execvp(cmd->args[0], cmd->args) == -1){
+            if (strcmp(cmd->args[0],"wc")==0){
+                char* args[] = {"wc",cmd->args[1],NULL};
+                execvp("/usr/bin/wc",args);
+            }
+            if (RunBuildInCmd(cmd)!=-1){return 1;}
+            exit(EXIT_FAILURE);
+        }
+
+        if (inFileFp)
+            fclose(inFileFp);
+
+    }
+    else if (pid < 0){
+        ShowError();
+    }
+    else{
+        if (!cmd->isBackgroundRunning){
+            do
+            {
+                (void)waitpid(pid, &status, WUNTRACED);
+            } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+        }
+        if(outFileFp){
+            fclose(outFileFp);
+            freopen("/dev/tty","w",stdout);
+        }
+    }
+    return 1;
+}
