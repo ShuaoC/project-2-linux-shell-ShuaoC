@@ -49,3 +49,45 @@ void IM(){
         free(command);
     }
 }
+
+void BatchMode(char *filename){
+    printf("myshell is running... \n");
+
+    FILE * fInput = fopen(filename, "r");
+    int isValidRead = 0;
+
+    if (fInput == NULL){
+        ShowError();
+        printf("\n");
+        return;
+    }
+
+    while (isValidRead != -1){
+        memset(&cmdList,0x00, sizeof(cmdList));
+
+        char *command = getCmdLine(&isValidRead, fInput);
+        if (command == NULL){
+            continue;
+        }
+        if (isValidRead == -1){
+            free(command);
+            continue;
+        }
+        char **cmdArgs = LineToArray(command);
+        if (*cmdArgs == NULL){
+            continue;
+        }
+
+
+        SplitCommands(cmdArgs, &cmdList);
+        OrgCommands(&cmdList);
+        RunMyShell(&cmdList);
+
+        free(cmdArgs);
+        FreeCommandArray(&cmdList);
+        free(command);
+
+    }
+    fclose(fInput);
+    printf("-----myshell end----- \n");
+}
