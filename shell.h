@@ -17,3 +17,5 @@ typedef struct StrCmd{
 
 void Prompt();
 void IM();
+int RunMyShell(StrCmdArray *cmdList);
+void BatchMode(char *filename);
