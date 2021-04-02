@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include "myshell.h"
+
 cmdList cmdL;    //list of commands
 
 int main(int argc, char **argv){
@@ -145,7 +146,7 @@ int externalCmd(cmdList *cmdList){
 }
 
 //Run a command
-int RCommand(StrCmd *cmd){
+int RCommand(cmdString *cmd){
     pid_t pid;
     int status;
     pid = fork();
@@ -206,54 +207,11 @@ int RCommand(StrCmd *cmd){
     return 1;
 }
 
-//run multiple commands with pipe
 int cmdPipe(cmdList *cmdList){
-        size_t i, n;
-        int prev_pipe, pfds[2];
-        n = cmdList->iCmdTotal;
-        prev_pipe = STDIN_FILENO;
-
-        for (i = 0; i < n - 1; i++){
-            pipe(pfds);
-            if (fork() == 0)
-            {
-                // Redirect previous pipe to stdin
-                if (prev_pipe != STDIN_FILENO) {
-                    dup2(prev_pipe, STDIN_FILENO);
-                    close(prev_pipe);
-                }
-
-                // Redirect stdout to current pipe
-                dup2(pfds[1], STDOUT_FILENO);
-                close(pfds[1]);
-
-                // Start command
-                execvp(cmdList->pCommand[i].args[0], cmdList->pCommand[i].args);
-                printf("Error\n");
-                exit(EXIT_FAILURE);
-            }
-
-            // Close read end of previous pipe (not needed in the parent)
-            close(prev_pipe);
-            // Close write end of current pipe (not needed in the parent)
-            close(pfds[1]);
-            // Save read end of current pipe to use in next iteration
-            prev_pipe = pfds[0];
-        }
-
-        // Get stdin from last pipe
-        if (prev_pipe != STDIN_FILENO) {
-            dup2(prev_pipe, STDIN_FILENO);
-            close(prev_pipe);
-        }
-
-        // Start last command
-        execvp(cmdList->pCommand[i].args[0], cmdList->pCommand[i].args);
-        printf("Error\n");
         exit(EXIT_FAILURE);
 }
 
-int internalCmd(StrCmd *cmd){
+int internalCmd(cmdString *cmd){
     if (strcmp(cmd->args[0],"cd")==0) {return Process_CD(cmd);}
     else if (strcmp(cmd->args[0],"clr")==0) {return Process_CLR();}
     else if (strcmp(cmd->args[0],"dir")==0) {return Process_DIR(cmd);}
@@ -266,7 +224,7 @@ int internalCmd(StrCmd *cmd){
 }
 
 //buildin function - CD
-int Process_CD (StrCmd *cmd){
+int Process_CD (cmdString *cmd){
     int argsCount = CountArg(cmd->args);
 
     if (argsCount  > 1){
@@ -295,7 +253,7 @@ int Process_CLR (){
     return EXIT_SUCCESS;
 }//clear the screen
 
-int Process_DIR (StrCmd *cmd){
+int Process_DIR (cmdString *cmd){
     FILE * file=NULL;
     int argsCount = CountArg(cmd->args);
     struct dirent *de;  //directory entry
@@ -325,7 +283,7 @@ int Process_DIR (StrCmd *cmd){
 }//ls command
 
 //buildin function - enviorn
-int Process_ENVIORN (StrCmd *cmd){
+int Process_ENVIORN (cmdString *cmd){
     FILE * file=NULL;
     int i = 0;
 
@@ -346,7 +304,7 @@ int Process_ENVIORN (StrCmd *cmd){
     return EXIT_SUCCESS;
 }
 
-int Process_ECHO (StrCmd *cmd){
+int Process_ECHO (cmdString *cmd){
     int argsCount;
     FILE * file=NULL;
     if (cmd->isRedirOutputFile){
@@ -365,26 +323,7 @@ int Process_ECHO (StrCmd *cmd){
     return 1;
 }//echo
 
-int Process_HELP (StrCmd *cmd){
-    FILE * file=NULL;
-    if (cmd->isRedirOutputFile){
-        char max_file_path[100] = {0};
-        GetAbsPath(max_file_path, cmd->sOutputFile);
-        file=freopen(max_file_path, cmd->isOutputTruncated ==  1 ? "w": "a",stdout);
-    }
-
-    if (fork() == 0){
-        char * const help[] = { "more", "readme", NULL };
-        if (execvp(help[0], help) == -1){
-            exit(EXIT_FAILURE);
-        }
-    }
-    if(file){
-        fclose(file);
-        freopen("/dev/tty","w",stdout);
-    }
-
-    return EXIT_SUCCESS;
+int Process_HELP (cmdString *cmd){
 }//help
 
 int Process_PAUSE (){

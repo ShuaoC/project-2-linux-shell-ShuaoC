@@ -2,16 +2,34 @@
 #define MAX_ARG_LENGTH 64
 #define MAXARGS 64
 
+typedef struct cmdString{
+    int iCmdID;
+    int iCmdType;
+    char* sInputFile;
+    char* sOutputFile;
+    char** args;
+    int isRedirInputFile;
+    int isRedirOutputFile;
+    int isBackgroundRunning;
+    int isOutputTruncated;
+} cmdString;
+
+typedef struct cmdList{
+    int iCmdTotal;
+    int isPipe;
+    cmdString pCommand[20];
+}cmdList;
+
 int myshell(cmdList *cmdList);
 void prompt();
 void InteractiveMode();
 void BatchMode(char *filename);
-int Process_CD (StrCmd *cmd);
+int Process_CD (cmdString *cmd);
 int Process_CLR ();
-int Process_DIR (StrCmd *cmd);
-int Process_ENVIORN (StrCmd *cmd);
-int Process_ECHO (StrCmd *cmd);
-int Process_HELP (StrCmd *cmd);
+int Process_DIR (cmdString *cmd);
+int Process_ENVIORN (cmdString *cmd);
+int Process_ECHO (cmdString *cmd);
+int Process_HELP (cmdString *cmd);
 int Process_PAUSE ();
 int Process_QUIT ();
 int Process_test();
@@ -25,30 +43,14 @@ char *GetCmd( int *isvalid, FILE* inputStream );
 char** lArray(char *line);
 void OrgCommands(cmdList *cmdList);
 void SplitCommands(char**args, cmdList *cmdList);
-int internalCmd(StrCmd *cmd);
+int internalCmd(cmdString *cmd);
 int externalCmd(cmdList *cmdList);
-int RCommand(StrCmd *cmd);
+int RCommand(cmdString *cmd);
 int RunCommandsNotWait(cmdList *cmdList);
 int cmdPipe(cmdList *cmdList);
 
 
-typedef struct StrCmd{
-    int iCmdID;
-    int iCmdType;
-    char* sInputFile;
-    char* sOutputFile;
-    char** args;
-    int isRedirInputFile;
-    int isRedirOutputFile;
-    int isBackgroundRunning;
-    int isOutputTruncated;
-} StrCmd;
 
-typedef struct cmdList{
-    int iCmdTotal;
-    int isPipe;
-    StrCmd pCommand[20];
-}cmdList;
  
 
 
