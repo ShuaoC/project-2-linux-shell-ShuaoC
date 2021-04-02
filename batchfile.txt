@@ -1,0 +1,11 @@
+cd
+mkdir testFolder
+cd testFolder
+touch testing.txt
+echo hello
+ls -la > testing.txt
+wc -l < testing.txt
+ps -aux | grep root
+cd ..
+dir testFolder
+environ

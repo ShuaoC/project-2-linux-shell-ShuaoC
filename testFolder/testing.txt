@@ -1,0 +1,44 @@
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  14 11:16 .
+drwx------ 5 tuh27406 domain users 4096 Mar  14 12:19 ..
+-rw------- 1 tuh27406 domain users 1297 Mar  14 12:19 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  14 11:16 .
+drwx------ 5 tuh27406 domain users 4096 Mar  14 12:19 ..
+-rw------- 1 tuh27406 domain users 1481 Mar  14 12:20 testing.txt
+total 4
+drwx------ 2 tuh27406 domain users   32 Mar 15 20:32 .
+drwx------ 5 tuh27406 domain users 4096 Mar 15 20:32 ..
+-rw------- 1 tuh27406 domain users    0 Mar 15 20:32 testing.txt
+total 4
+drwx------ 2 tuh27406 domain users   32 Mar 16 19:56 .
+drwx------ 5 tuh27406 domain users 4096 Mar 16 19:56 ..
+-rw------- 1 tuh27406 domain users    0 Mar 16 19:56 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  19 10:16 .
+drwx------ 6 tuh27406 domain users 4096 Mar  19 10:32 ..
+-rw------- 1 tuh27406 domain users  184 Mar  19 10:32 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  19 10:16 .
+drwx------ 5 tuh27406 domain users 4096 Mar  19 10:36 ..
+-rw------- 1 tuh27406 domain users  371 Mar  19 10:36 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  19 10:16 .
+drwx------ 5 tuh27406 domain users 4096 Mar  19 10:40 ..
+-rw------- 1 tuh27406 domain users  558 Mar  19 11:15 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  20 15:16 .
+drwx------ 5 tuh27406 domain users 4096 Mar  20 15:18 ..
+-rw------- 1 tuh27406 domain users  929 Mar  20 15:18 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Mar  20 15:16 .
+drwx------ 5 tuh27406 domain users 4096 Mar  20 15:18 ..
+-rw------- 1 tuh27406 domain users 1113 Mar  20 15:18 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Apr  1 11:16 .
+drwx------ 5 tuh27406 domain users 4096 Apr  1 12:19 ..
+-rw------- 1 tuh27406 domain users 1665 Apr  1 12:25 testing.txt
+total 8
+drwx------ 2 tuh27406 domain users   32 Apr  1 11:16 .
+drwx------ 5 tuh27406 domain users 4096 Apr  1 18:43 ..
+-rw------- 1 tuh27406 domain users 1855 Apr  1 18:43 testing.txt
